@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { auth } from '@/lib/firebaseConfig';
+import { auth } from '@/lib/firebaseConfig.js';
 import { onAuthStateChanged } from 'firebase/auth';
 
 export default function SubscribePage() {

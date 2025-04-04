@@ -1,11 +1,11 @@
 'use client';
 
-import { auth } from '@/lib/firebaseConfig';
+import { auth } from '@/lib/firebaseConfig.js';
 import { GoogleAuthProvider, signInWithPopup, UserCredential } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebaseConfig';
+import { db } from '@/lib/firebaseConfig.js';
 
 export default function LoginPage() {
   const router = useRouter();

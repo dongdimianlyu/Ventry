@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebaseConfig';
-import { auth } from '@/lib/firebaseConfig';
+import { db } from '@/lib/firebaseConfig.js';
+import { auth } from '@/lib/firebaseConfig.js';
 import { User } from 'firebase/auth';
 
 export default function GenerationLimitCounter() {

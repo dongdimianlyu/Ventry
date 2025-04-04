@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebaseConfig';
+import { auth } from '@/lib/firebaseConfig.js';
 import { initializeAuth, refreshAuthCookies } from '@/lib/auth';
 
 interface AuthGuardProps {

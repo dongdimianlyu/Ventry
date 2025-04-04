@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebaseConfig';
+import { db } from '@/lib/firebaseConfig.js';
 import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 
 /**

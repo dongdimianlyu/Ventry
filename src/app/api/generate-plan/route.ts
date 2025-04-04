@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import { auth } from '@/lib/firebaseConfig';
+import { auth } from '@/lib/firebaseConfig.js';
 import { checkAndUpdateGenerationLimit } from '@/middleware/userLimits';
 
 // Initialize OpenAI client

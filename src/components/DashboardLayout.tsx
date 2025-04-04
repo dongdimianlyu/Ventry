@@ -8,7 +8,7 @@ import FinancialToolsContent from './FinancialToolsContent';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useBusinessPlan } from '@/contexts/BusinessPlanContext';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebaseConfig';
+import { auth } from '@/lib/firebaseConfig.js';
 import ThemeToggle from './ThemeToggle';
 import { 
   BellIcon, 
