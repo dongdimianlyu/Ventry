@@ -48,6 +48,9 @@
     "typescript": "^5.3.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "18.x"
+  },
+  "overrides": {
+    "undici": "5.22.1"
   }
 }
