@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { signInWithGoogle } from '@/lib/auth';
-import { auth } from '@/lib/firebaseConfig';
+import { auth } from '@/lib/firebaseConfig.js';
 import { onAuthStateChanged } from 'firebase/auth';
 
 // Dynamic import for particle field
