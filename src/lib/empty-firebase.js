@@ -83,4 +83,18 @@ module.exports = {
     auth: mockAuth,
     firestore: mockDb,
   }),
+
+  // New functions from the code block
+  signInWithEmailAndPassword: () => Promise.resolve({}),
+  createUserWithEmailAndPassword: () => Promise.resolve({}),
+  addDoc: () => Promise.resolve({ id: 'mock-id' }),
+  deleteDoc: () => Promise.resolve({}),
+  query: () => ({}),
+  where: () => ({}),
+  limit: () => ({}),
+  orderBy: () => ({}),
+  default: {
+    apps: [],
+    initializeApp: () => ({})
+  }
 }; 

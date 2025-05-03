@@ -2,7 +2,7 @@
 const path = require('path');
 
 const nextConfig = {
-  reactStrictMode: false, // Disable strict mode in development for better performance
+  reactStrictMode: false, // Disable strict mode for better performance
   output: 'standalone',
   
   // Completely disable SWC
@@ -28,6 +28,10 @@ const nextConfig = {
     'firebase', 
     'undici'
   ],
+  
+  // Production performance optimizations
+  productionBrowserSourceMaps: false,
+  compress: true,
   
   // Disable webpack5 features that conflict with our setup
   webpack: (config, { isServer }) => {

@@ -1,5 +1,4 @@
 # Dependencies and build artifacts
-node_modules
 .next
 .vercel
 .env.local
@@ -21,15 +20,12 @@ src/middleware
 src/components/AuthGuard.tsx
 src/components/GenerationLimitCounter.tsx
 src/components/DashboardLayout.tsx
-**/firebase/**
 **/auth/**
 src/app/login/**
 src/app/register/**
 src/app/password-reset/**
 src/app/subscribe/**
 src/app/auth/**
-node_modules/@firebase
-node_modules/firebase
 **/*.babelrc
 **/.babelrc
 
@@ -40,14 +36,6 @@ node_modules/firebase
 next.config.ts.backup
 *.backup
 *.old
-
-# Components with Markdown issues
-src/app/plan-generator/**
-src/components/BusinessPlanDisplay.tsx
-src/components/DashboardPlanGenerator.tsx
-src/components/BusinessPlanTimeline.tsx
-simple-deploy/components/BusinessPlanDisplay.tsx
-react-markdown
 
 # Deployment directories
 simple-deploy/
