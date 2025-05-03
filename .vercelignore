@@ -1,0 +1,29 @@
+# Dependencies and build artifacts
+node_modules
+.next
+.vercel
+.env.local
+.env.development
+
+# Test and miscellaneous files
+three-backup
+test
+**/*.test.*
+**/*.spec.*
+**/__tests__/**
+
+# Firebase related (to avoid the build issues)
+src/lib/firebaseTest.ts
+
+# Backup files
+.babelrc.old
+next.config.ts.backup
+*.backup
+*.old
+
+# Deployment directories
+simple-deploy/
+
+# Temp files
+temp_*.txt
+add_imports.txt 
