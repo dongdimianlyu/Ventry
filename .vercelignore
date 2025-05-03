@@ -21,8 +21,11 @@ src/lib/firebaseConfig.ts
 src/app/login/**
 src/app/register/**
 src/app/password-reset/**
+src/app/subscribe/**
 node_modules/@firebase
 node_modules/firebase
+**/*.babelrc
+**/.babelrc
 
 # Babel and config files issues
 .babelrc

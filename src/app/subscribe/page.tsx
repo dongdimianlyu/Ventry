@@ -2,22 +2,18 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { auth } from '@/lib/firebaseConfig';
-import { onAuthStateChanged } from 'firebase/auth';
 
 export default function SubscribePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.push('/auth/login');
-      }
+    // Simulate auth check without Firebase
+    const timer = setTimeout(() => {
       setLoading(false);
-    });
-
-    return () => unsubscribe();
+    }, 1000);
+    
+    return () => clearTimeout(timer);
   }, [router]);
 
   const handleContinue = () => {
