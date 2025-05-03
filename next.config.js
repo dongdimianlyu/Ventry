@@ -16,10 +16,7 @@ const nextConfig = {
   
   experimental: {
     // Force using Babel, not SWC
-    forceSwcTransforms: false,
-    
-    // Disable font optimization since we're using Babel
-    fontLoaders: []
+    forceSwcTransforms: false
   },
   
   // Disable font optimization
@@ -61,6 +58,11 @@ const nextConfig = {
       '@firebase/auth': path.resolve(__dirname, './src/lib/empty-firebase.js'),
       '@firebase/app': path.resolve(__dirname, './src/lib/empty-firebase.js'),
       '@firebase/firestore': path.resolve(__dirname, './src/lib/empty-firebase.js'),
+      
+      // Replace react-markdown with empty module
+      'react-markdown': path.resolve(__dirname, './src/lib/empty-module.js'),
+      'remark-gfm': path.resolve(__dirname, './src/lib/empty-module.js'),
+      'react-syntax-highlighter': path.resolve(__dirname, './src/lib/empty-module.js'),
     };
     
     return config;

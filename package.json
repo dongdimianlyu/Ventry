@@ -4,10 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --no-lint",
+    "build": "NEXT_TELEMETRY_DISABLED=1 next build --no-lint",
     "start": "next start",
     "start-server": "NODE_ENV=production node server.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "vercel-build": "npm set progress=false && npm config set registry https://registry.npmjs.org/ && npm run build"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",

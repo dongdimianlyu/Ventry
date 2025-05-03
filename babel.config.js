@@ -19,21 +19,10 @@ module.exports = {
     '@babel/plugin-transform-runtime',
     '@babel/plugin-proposal-do-expressions',
   ],
-  // Aggressive approach to isolate problematic modules
+  // Process specific node modules that need transformation
   overrides: [
-    // Process firebase auth modules with all transforms
     {
-      include: /node_modules[\\/](@firebase|firebase)[\\/].*\.m?js$/,
-      plugins: [
-        '@babel/plugin-transform-private-methods',
-        '@babel/plugin-transform-private-property-in-object',
-        '@babel/plugin-transform-class-properties',
-        '@babel/plugin-transform-class-static-block',
-      ]
-    },
-    // Process undici with all transforms
-    {
-      include: /node_modules[\\/]undici[\\/].*\.m?js$/,
+      test: /node_modules[\/\\](@firebase|firebase|undici)[\/\\].+\.m?js$/,
       plugins: [
         '@babel/plugin-transform-private-methods',
         '@babel/plugin-transform-private-property-in-object',
@@ -41,10 +30,6 @@ module.exports = {
         '@babel/plugin-transform-class-static-block',
       ]
     }
-  ],
-  // Exclude all node_modules except the ones we need to transform
-  ignore: [
-    /node_modules[\\/](?!(@firebase|firebase|undici))/
   ],
   compact: true,
   sourceMaps: false,

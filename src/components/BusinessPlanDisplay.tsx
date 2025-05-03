@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
 import { useBusinessPlan } from '@/contexts/BusinessPlanContext';
 
 interface BusinessPlanDisplayProps {
@@ -17,144 +16,93 @@ const BusinessPlanDisplay: React.FC<BusinessPlanDisplayProps> = ({ plan, busines
     setIsStrategicPlan(planType === 'strategic');
   }, [planType]);
 
-  // Custom renderer for headings
-  const customRenderers = {
-    h1: ({ node, ...props }: any) => (
-      <h1 
-        className="text-2xl md:text-3xl font-bold mb-6 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-blue-500" 
-        {...props} 
-      />
-    ),
-    h2: ({ node, ...props }: any) => (
-      <h2 
-        className="text-xl md:text-2xl font-semibold mt-8 mb-4 pb-2 text-gray-100 border-b border-gray-700/50" 
-        {...props} 
-      />
-    ),
-    h3: ({ node, ...props }: any) => (
-      <h3 
-        className="text-lg md:text-xl font-medium mt-6 mb-3 text-emerald-400" 
-        {...props} 
-      />
-    ),
-    h4: ({ node, ...props }: any) => (
-      <h4 
-        className="text-md md:text-lg font-medium mt-4 mb-2 text-blue-400" 
-        {...props} 
-      />
-    ),
-    p: ({ node, ...props }: any) => (
-      <p 
-        className="my-3 text-gray-300 leading-relaxed" 
-        {...props} 
-      />
-    ),
-    ul: ({ node, ...props }: any) => (
-      <ul 
-        className="list-disc pl-6 my-4 space-y-2" 
-        {...props} 
-      />
-    ),
-    ol: ({ node, ...props }: any) => (
-      <ol 
-        className="list-decimal pl-6 my-4 space-y-2" 
-        {...props} 
-      />
-    ),
-    li: ({ node, ...props }: any) => (
-      <li 
-        className="text-gray-300 mb-1" 
-        {...props} 
-      />
-    ),
-    code: ({ node, inline, className, children, ...props }: any) => {
-      if (inline) {
-        return (
-          <code 
-            className="px-1.5 py-0.5 rounded bg-gray-800 text-gray-300 text-sm font-mono" 
-            {...props}
-          >
-            {children}
-          </code>
-        );
-      }
-      
-      const codeContent = String(children).replace(/\n$/, '');
-      
-      // If this is JSON content, we want to hide it (it's the tasks for timeline)
-      if (codeContent.includes('"dailyTasks"')) {
-        return null;
-      }
-      
+  // Simple text display that preserves newlines and indentation
+  const SimplePlanDisplay = () => {
+    // Remove any JSON blocks
+    const cleanPlan = plan.replace(/```json[\s\S]*?```/g, '');
+    
+    // Split by paragraphs
+    const paragraphs = cleanPlan.split('\n\n').filter(p => p.trim() !== '');
+    
     return (
-        <pre className="rounded-lg bg-gray-900/40 p-4 my-4 overflow-x-auto border border-gray-700/50">
-          <code 
-            className="text-sm font-mono text-gray-300"
-            {...props}
-          >
-            {codeContent}
-          </code>
-        </pre>
-      );
-    },
-    blockquote: ({ node, ...props }: any) => (
-      <blockquote 
-        className="border-l-4 border-emerald-500/50 pl-4 italic my-4 text-gray-400" 
-        {...props} 
-      />
-    ),
-    table: ({ node, ...props }: any) => (
-      <div className="overflow-x-auto my-6">
-        <table 
-          className="min-w-full divide-y divide-gray-700 border border-gray-700 rounded-lg" 
-          {...props} 
-        />
+      <div className="plan-content">
+        {paragraphs.map((paragraph, index) => {
+          // Check if this is a heading
+          if (paragraph.startsWith('# ')) {
+            return (
+              <h1 
+                key={index}
+                className="text-2xl md:text-3xl font-bold mb-6 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-blue-500" 
+              >
+                {paragraph.replace('# ', '')}
+              </h1>
+            );
+          }
+          
+          if (paragraph.startsWith('## ')) {
+            return (
+              <h2 
+                key={index}
+                className="text-xl md:text-2xl font-semibold mt-8 mb-4 pb-2 text-gray-100 border-b border-gray-700/50" 
+              >
+                {paragraph.replace('## ', '')}
+              </h2>
+            );
+          }
+          
+          if (paragraph.startsWith('### ')) {
+            return (
+              <h3 
+                key={index}
+                className="text-lg md:text-xl font-medium mt-6 mb-3 text-emerald-400" 
+              >
+                {paragraph.replace('### ', '')}
+              </h3>
+            );
+          }
+          
+          if (paragraph.startsWith('#### ')) {
+            return (
+              <h4 
+                key={index}
+                className="text-md md:text-lg font-medium mt-4 mb-2 text-blue-400" 
+              >
+                {paragraph.replace('#### ', '')}
+              </h4>
+            );
+          }
+          
+          // Check if this is a list
+          if (paragraph.includes('\n- ')) {
+            const listItems = paragraph.split('\n- ').filter(item => item.trim());
+            return (
+              <ul key={index} className="list-disc pl-6 my-4 space-y-2">
+                {listItems.map((item, i) => (
+                  <li key={i} className="text-gray-300 mb-1">{item}</li>
+                ))}
+              </ul>
+            );
+          }
+          
+          // Regular paragraph
+          return (
+            <p 
+              key={index}
+              className="my-3 text-gray-300 leading-relaxed whitespace-pre-wrap" 
+            >
+              {paragraph}
+            </p>
+          );
+        })}
       </div>
-    ),
-    thead: ({ node, ...props }: any) => (
-      <thead 
-        className="bg-gray-800" 
-        {...props} 
-      />
-    ),
-    tbody: ({ node, ...props }: any) => (
-      <tbody 
-        className="divide-y divide-gray-700 bg-gray-900/30" 
-        {...props} 
-      />
-    ),
-    tr: ({ node, ...props }: any) => (
-      <tr 
-        className="hover:bg-gray-800/50 transition-colors duration-150" 
-        {...props} 
-      />
-    ),
-    th: ({ node, ...props }: any) => (
-      <th 
-        className="px-4 py-3 text-left text-sm font-medium text-gray-200 uppercase tracking-wider" 
-        {...props} 
-      />
-    ),
-    td: ({ node, ...props }: any) => (
-      <td 
-        className="px-4 py-3 text-sm text-gray-300" 
-        {...props} 
-      />
-    ),
+    );
   };
 
-  // Strategic Plan specific styling
-  const StrategicPlanDisplay = () => (
-    <div className="strategic-plan-display">
-      <ReactMarkdown components={customRenderers}>{plan}</ReactMarkdown>
-    </div>
-  );
-
-  // Daily Plan specific styling with custom task rendering
+  // Parse daily tasks directly
   const DailyPlanDisplay = () => {
     // Parse JSON tasks if available
     const jsonMatch = plan.match(/```json\s*([\s\S]*?)```/);
-    let tasks = [];
+    let tasks: any[] = [];
     let hasTasksJson = false;
     
     if (jsonMatch && jsonMatch[1]) {
@@ -172,12 +120,9 @@ const BusinessPlanDisplay: React.FC<BusinessPlanDisplayProps> = ({ plan, busines
       }
     }
 
-    // Split the plan content for sections outside of the JSON tasks
-    const planContent = plan.replace(/```json[\s\S]*?```/, '');
-
     return (
       <div className="daily-plan-display">
-        <ReactMarkdown components={customRenderers}>{planContent}</ReactMarkdown>
+        <SimplePlanDisplay />
         
         {hasTasksJson && (
           <div className="mt-8">
@@ -218,23 +163,23 @@ const BusinessPlanDisplay: React.FC<BusinessPlanDisplayProps> = ({ plan, busines
                               : 'bg-green-900/30 text-green-400 border border-green-800/30'
                       }`}>
                         {task.category}
-            </span>
-          </div>
-        )}
+                      </span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           </div>
         )}
-          </div>
+      </div>
     );
   };
 
   return (
     <div className="max-w-5xl mx-auto">
       <div className="prose prose-invert max-w-none custom-scrollbar-dark">
-        {isStrategicPlan ? <StrategicPlanDisplay /> : <DailyPlanDisplay />}
-        </div>
+        {isStrategicPlan ? <SimplePlanDisplay /> : <DailyPlanDisplay />}
+      </div>
     </div>
   );
 };

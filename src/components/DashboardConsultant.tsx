@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence, useAnimationControls } from 'framer-motion';
 
 type Message = {
@@ -37,93 +36,26 @@ type DashboardConsultantProps = {
   businessLocation?: string;
 };
 
-// Add a new TypewriterText component for animated responses
+// Simplified TypewriterText component without ReactMarkdown
 const TypewriterText = ({ content }: { content: string }) => {
-  // Split content into paragraphs and sections
-  const sections = content.split('\n\n').filter(p => p.trim() !== '');
+  // Split content into paragraphs
+  const paragraphs = content.split('\n\n').filter(p => p.trim() !== '');
   
   return (
     <div className="prose prose-invert max-w-none">
-      {sections.map((section, sIndex) => {
-        // Check if this is a list section
-        const isList = section.trim().startsWith('-') || section.trim().startsWith('*');
-        
-        return (
-          <motion.div
-            key={sIndex}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: sIndex * 0.2 }}
-            className={`${
-              isList 
-                ? 'bg-gray-800/30 rounded-xl p-4 border border-gray-700/50 my-2' 
-                : 'my-4'
-            }`}
-          >
-            <ReactMarkdown
-              components={{
-                h1: ({ children }) => (
-                  <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-4">
-                    {children}
-                  </h1>
-                ),
-                h2: ({ children }) => (
-                  <h2 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-3">
-                    {children}
-                  </h2>
-                ),
-                h3: ({ children }) => (
-                  <h3 className="text-lg font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-2">
-                    {children}
-                  </h3>
-                ),
-                p: ({ children }) => (
-                  <p className="text-gray-300 leading-relaxed mb-4">
-                    {children}
-                  </p>
-                ),
-                ul: ({ children }) => (
-                  <ul className="list-disc list-inside space-y-2 text-gray-300">
-                    {children}
-                  </ul>
-                ),
-                ol: ({ children }) => (
-                  <ol className="list-decimal list-inside space-y-2 text-gray-300">
-                    {children}
-                  </ol>
-                ),
-                li: ({ children }) => (
-                  <li className="text-gray-300 leading-relaxed">
-                    {children}
-                  </li>
-                ),
-                strong: ({ children }) => (
-                  <strong className="text-blue-400 font-semibold">
-                    {children}
-                  </strong>
-                ),
-                em: ({ children }) => (
-                  <em className="text-cyan-400 italic">
-                    {children}
-                  </em>
-                ),
-                code: ({ children }) => (
-                  <code className="bg-gray-800/50 px-1.5 py-0.5 rounded text-sm font-mono text-blue-400">
-                    {children}
-                  </code>
-                ),
-                blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-blue-500/50 pl-4 italic text-gray-400 my-4">
-                    {children}
-                  </blockquote>
-                ),
-              }}
-            >
-              {section}
-            </ReactMarkdown>
-          </motion.div>
-        );
-      })}
+      {paragraphs.map((paragraph, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: index * 0.2 }}
+          className="my-4"
+        >
+          <p className="text-gray-300 leading-relaxed mb-4 whitespace-pre-wrap">
+            {paragraph}
+          </p>
+        </motion.div>
+      ))}
     </div>
   );
 };
@@ -146,7 +78,7 @@ const LoadingIndicator = () => {
   );
 };
 
-// Add this new component for the navigation tabs
+// Navigation tabs component
 const NavigationTabs = ({ activeView, setActiveView }: { 
   activeView: 'chat' | 'insights' | 'recommendations';
   setActiveView: (view: 'chat' | 'insights' | 'recommendations') => void;
@@ -249,353 +181,319 @@ export default function DashboardConsultant({
       description: 'Competitive analysis based on price point and service quality.',
       metrics: [
         { label: 'Price Competitiveness', value: 'Mid-tier', trend: 'neutral' },
-        { label: 'Quality Perception', value: '4.2/5', change: '+0.3', trend: 'up' },
-        { label: 'Market Share', value: '12%', change: '+1.5%', trend: 'up' }
+        { label: 'Service Quality Rating', value: '4.2/5', change: '+0.3', trend: 'up' },
+        { label: 'Market Share', value: '12%', change: '+2%', trend: 'up' }
       ]
     }
   ];
 
+  // Scroll to bottom of chat when new messages are added
   useEffect(() => {
     scrollToBottom();
-  }, [messages, activeView]);
-
-  useEffect(() => {
-    // Initialize with welcome message if context is already set
-    if (contextSet && messages.length === 0) {
-      setMessages([
-        {
-          role: 'assistant',
-          content: 'Welcome to your strategic consulting session. I\'m ready to help solve your business challenges with actionable insights. What specific challenge or opportunity would you like to discuss today?',
-          recommendations: demoRecommendations,
-          insights: demoInsights
-        }
-      ]);
-    }
-  }, [contextSet, messages.length]);
+  }, [messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Handle business context form submission
   const handleContextSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (localBusinessContext.trim()) {
+    if (localBusinessContext) {
+      // Save to localStorage
       localStorage.setItem('businessContext', localBusinessContext);
       if (localBusinessLocation) {
         localStorage.setItem('businessLocation', localBusinessLocation);
       }
+      
       setContextSet(true);
     }
   };
 
+  // Handle sending a message
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || sendingMessage) return;
-
-    const userMessage: Message = { role: 'user', content: input };
+    
+    const userMessage: Message = {
+      role: 'user',
+      content: input
+    };
+    
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setSendingMessage(true);
-    setError('');
-    setNewResponseId(null);
-
-    // Scroll to bottom immediately after user sends message
-    setTimeout(() => scrollToBottom(), 100);
-
+    
     try {
-      // Format messages for API
-      const consultantPrompt = `As an expert business strategist, provide concise, actionable insights for this business: (${localBusinessContext}). Respond to: "${input}"${localBusinessLocation ? ` in ${localBusinessLocation}` : ''}. Keep your response under 200 words, focusing on practical, strategic advice with clear action steps. If you need more information, ask 1-2 brief questions.`;
-      
-      // If this is the first user message, use the consultant prompt template
-      // Otherwise use the regular message format for conversation continuity
-      const formattedMessages = messages.map(msg => ({ role: msg.role, content: msg.content }));
-      
-      // Add user message, but if it's the first message, don't add it directly since we're using the prompt template
-      if (formattedMessages.length > 1) {
-        formattedMessages.push({ role: 'user', content: input });
-      }
-      
-      // For the first message, use the consultant prompt template that includes user context and message
-      if (formattedMessages.length <= 1) {
-        formattedMessages.push({ role: 'user', content: consultantPrompt });
-      }
-
-      // Add artificial delay for better UX (1-3 seconds)
-      const minDelay = 1000;
-      const artificialDelay = Math.random() * 1500 + minDelay;
-      
-      const responsePromise = fetch('/api/ai-consultant', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messages: formattedMessages,
-          businessContext: localBusinessContext,
-          businessLocation: localBusinessLocation,
-        }),
-      });
-      
-      // Wait for both the response and the minimum delay
-      const [response] = await Promise.all([
-        responsePromise,
-        new Promise(resolve => setTimeout(resolve, artificialDelay))
-      ]);
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to get response');
-      }
-
-      // Get the new response ID (to highlight it with animation)
-      const newId = messages.length;
-      
-      // Add AI response to messages with demo recommendations and insights
-      setMessages(prev => [
-        ...prev,
-        { 
-          role: 'assistant', 
-          content: data.message.content,
+      // For demo purposes, simulate a response after a delay
+      setTimeout(() => {
+        const demoResponse: Message = {
+          role: 'assistant',
+          content: `Based on your query about "${input}" for your ${localBusinessContext} business in ${localBusinessLocation || 'your area'}, here are some insights:\n\nThis is a simulated response for demonstration purposes. In a production environment, this would connect to an AI service to provide tailored business advice.`,
           recommendations: demoRecommendations,
-          insights: demoInsights 
-        }
-      ]);
-      
-      // Set the ID of the new response for animation effects
-      setNewResponseId(newId);
-      
-      // Play a subtle sound effect when the response arrives
-      const audio = new Audio('/sounds/message-received.mp3');
-      audio.volume = 0.2;
-      try {
-        await audio.play();
-      } catch (audioErr) {
-        // Silent fail if the browser blocks autoplay
-        console.log('Audio playback blocked by browser policy');
-      }
-      
-    } catch (err: any) {
-      setError(err.message);
-      console.error(err);
-    } finally {
+          insights: demoInsights
+        };
+        
+        setMessages(prev => [...prev, demoResponse]);
+        setSendingMessage(false);
+        setNewResponseId(messages.length + 1);
+      }, 2000);
+    } catch (err) {
+      console.error('Error sending message:', err);
+      setError('Failed to get a response. Please try again.');
       setSendingMessage(false);
-      // Scroll to bottom after response arrives
-      setTimeout(() => scrollToBottom(), 100);
     }
   };
 
-  return (
-    <div className="flex flex-col h-full bg-gray-900/50 backdrop-blur-xl rounded-2xl border border-gray-800/50 shadow-xl">
-      {/* Header */}
-      <div className="p-6 border-b border-gray-800/50">
-        <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-          AI Business Consultant
-        </h2>
-        <p className="text-gray-400 mt-1">
-          Get expert advice and strategic recommendations for your business
+  // Business context form if not already set
+  if (!contextSet) {
+    return (
+      <div className="p-6 bg-gray-900/50 backdrop-blur-md rounded-xl border border-gray-800 shadow-2xl max-w-2xl mx-auto">
+        <h2 className="text-2xl font-bold text-blue-400 mb-6">Business Context</h2>
+        <p className="text-gray-400 mb-6">
+          To provide you with personalized advice, I need to understand your business context.
+          Please provide some basic information about your business:
         </p>
+        
+        <form onSubmit={handleContextSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-1">
+              What type of business do you run?
+            </label>
+            <input
+              type="text"
+              value={localBusinessContext}
+              onChange={(e) => setLocalBusinessContext(e.target.value)}
+              placeholder="e.g., Coffee shop, SaaS startup, Consulting firm"
+              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              required
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-1">
+              Where is your business located? (Optional)
+            </label>
+            <input
+              type="text"
+              value={localBusinessLocation}
+              onChange={(e) => setLocalBusinessLocation(e.target.value)}
+              placeholder="e.g., New York, London, Online only"
+              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            />
+          </div>
+          
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-800 text-white font-semibold py-2 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+          >
+            Get Started
+          </button>
+        </form>
       </div>
+    );
+  }
 
-      {/* Navigation */}
-      <div className="px-6 py-4">
+  return (
+    <div className="flex flex-col h-full">
+      {/* Navigation Tabs */}
+      <div className="mb-4">
         <NavigationTabs activeView={activeView} setActiveView={setActiveView} />
       </div>
-
-      {/* Main Content */}
-      <div className="flex-1 overflow-hidden">
-        <AnimatePresence mode="wait">
-          {activeView === 'chat' && (
-            <motion.div
-              key="chat"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.2 }}
-              className="h-full flex flex-col"
-            >
-              {/* Messages */}
-              <div className="flex-1 overflow-y-auto space-y-6 p-6">
-                <AnimatePresence>
-                  {messages.map((message, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                      className={`flex ${
-                        message.role === 'user' ? 'justify-end' : 'justify-start'
+      
+      {/* Chat View */}
+      {activeView === 'chat' && (
+        <div className="flex flex-col h-full">
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto px-4 py-4 rounded-t-xl bg-gray-900/30">
+            {messages.length === 0 ? (
+              <div className="py-8 text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-600/10 mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-blue-400 mb-2">Strategic Business Advisor</h3>
+                <p className="text-gray-400 max-w-md mx-auto">
+                  Ask me about growth strategies, market analysis, customer acquisition, or any business challenges you're facing.
+                </p>
+                
+                <div className="mt-6 space-y-2">
+                  <button 
+                    onClick={() => setInput("What are the most effective customer acquisition strategies for a business like mine?")}
+                    className="w-full text-left px-4 py-3 bg-gray-800/70 hover:bg-gray-700/70 rounded-lg text-gray-300 transition"
+                  >
+                    What are the most effective customer acquisition strategies for a business like mine?
+                  </button>
+                  <button 
+                    onClick={() => setInput("How can I differentiate my business from competitors?")}
+                    className="w-full text-left px-4 py-3 bg-gray-800/70 hover:bg-gray-700/70 rounded-lg text-gray-300 transition"
+                  >
+                    How can I differentiate my business from competitors?
+                  </button>
+                  <button 
+                    onClick={() => setInput("What metrics should I be tracking for my business type?")}
+                    className="w-full text-left px-4 py-3 bg-gray-800/70 hover:bg-gray-700/70 rounded-lg text-gray-300 transition"
+                  >
+                    What metrics should I be tracking for my business type?
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {messages.map((message, index) => (
+                  <motion.div 
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div 
+                      className={`px-4 py-3 rounded-xl max-w-[85%] ${
+                        message.role === 'user' 
+                          ? 'bg-blue-600/20 border border-blue-500/30 text-blue-100' 
+                          : 'bg-gray-800/70 border border-gray-700/50 text-gray-200'
                       }`}
                     >
-                      <div
-                        className={`max-w-[80%] rounded-2xl p-4 ${
-                          message.role === 'user'
-                            ? 'bg-blue-500/10 border border-blue-500/20'
-                            : 'bg-gray-800/50 border border-gray-700/50'
-                        }`}
-                      >
-                        {message.role === 'user' ? (
-                          <p className="text-gray-200">{message.content}</p>
-                        ) : (
-                          <TypewriterText content={message.content} />
-                        )}
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+                      {message.role === 'user' ? (
+                        <div className="whitespace-pre-wrap">{message.content}</div>
+                      ) : (
+                        <TypewriterText content={message.content} />
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+                
                 {sendingMessage && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex justify-start"
-                  >
-                    <div className="max-w-[80%] rounded-2xl p-4 bg-gray-800/50 border border-gray-700/50">
+                  <div className="flex justify-start">
+                    <div className="px-4 py-3 rounded-xl max-w-[85%] bg-gray-800/70 border border-gray-700/50">
                       <LoadingIndicator />
                     </div>
-                  </motion.div>
+                  </div>
                 )}
-                {error && (
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                    className="flex justify-center"
-                  >
-                    <div className="bg-red-900/30 border border-red-700/50 text-red-400 px-6 py-4 rounded-lg flex items-center space-x-3">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                      </svg>
-                      <span>Error: {error}. Please try again.</span>
-                    </div>
-                  </motion.div>
-                )}
+                
                 <div ref={messagesEndRef} />
               </div>
-
-              {/* Input Form */}
-              <div className="p-6 border-t border-gray-800/50">
-                <form onSubmit={handleSendMessage} className="flex space-x-4">
-                  <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Ask your business question..."
-                    className="flex-1 bg-gray-800/50 border border-gray-700/50 rounded-xl px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
-                    disabled={sendingMessage}
-                  />
-                  <button
-                    type="submit"
-                    disabled={!input.trim() || sendingMessage}
-                    className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
-                      !input.trim() || sendingMessage
-                        ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50'
-                    }`}
-                  >
-                    {sendingMessage ? 'Sending...' : 'Send'}
-                  </button>
-                </form>
-              </div>
-            </motion.div>
-          )}
-
-          {activeView === 'insights' && (
+            )}
+          </div>
+          
+          {/* Input Form */}
+          <div className="p-4 border-t border-gray-800 bg-gray-800/50 rounded-b-xl">
+            <form onSubmit={handleSendMessage} className="flex items-center space-x-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask about business strategy, market analysis, or growth tactics..."
+                className="flex-1 bg-gray-700/70 border border-gray-600/50 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                disabled={sendingMessage}
+              />
+              <button
+                type="submit"
+                disabled={sendingMessage || !input.trim()}
+                className={`p-2 rounded-lg ${
+                  sendingMessage || !input.trim()
+                    ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-500 hover:to-blue-800'
+                } transition-all duration-200`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+      
+      {/* Insights View */}
+      {activeView === 'insights' && (
+        <div className="bg-gray-900/30 rounded-xl p-6 space-y-6">
+          {demoInsights.map(insight => (
             <motion.div
-              key="insights"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.2 }}
-              className="h-full overflow-y-auto p-6"
+              key={insight.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="bg-gray-800/50 rounded-xl border border-gray-700/50 overflow-hidden"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {demoInsights.map((insight) => (
-                  <motion.div
-                    key={insight.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-6"
-                  >
-                    <h3 className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-3">
-                      {insight.title}
-                    </h3>
-                    <p className="text-gray-400 mb-4">{insight.description}</p>
-                    <div className="space-y-3">
-                      {insight.metrics.map((metric, index) => (
-                        <div key={index} className="flex justify-between items-center">
-                          <span className="text-gray-400">{metric.label}</span>
-                          <div className="flex items-center space-x-2">
-                            <span className="text-gray-200 font-medium">{metric.value}</span>
-                            {metric.change && (
-                              <span className={`text-sm ${
-                                metric.trend === 'up' ? 'text-green-400' :
-                                metric.trend === 'down' ? 'text-red-400' :
-                                'text-gray-400'
-                              }`}>
-                                {metric.change}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      ))}
+              <div className="p-4 border-b border-gray-700/50">
+                <h3 className="text-lg font-medium text-blue-400">{insight.title}</h3>
+                <p className="text-gray-400 text-sm mt-1">{insight.description}</p>
+              </div>
+              
+              <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                {insight.metrics.map((metric, i) => (
+                  <div key={i} className="bg-gray-900/50 rounded-lg p-3">
+                    <p className="text-gray-500 text-xs font-medium">{metric.label}</p>
+                    <div className="flex items-baseline mt-1">
+                      <p className="text-xl font-semibold text-gray-200">{metric.value}</p>
+                      {metric.change && (
+                        <span className={`ml-2 text-xs font-medium ${
+                          metric.trend === 'up' ? 'text-green-500' : 
+                          metric.trend === 'down' ? 'text-red-500' : 
+                          'text-gray-500'
+                        }`}>
+                          {metric.change}
+                          {metric.trend === 'up' && ' ↑'}
+                          {metric.trend === 'down' && ' ↓'}
+                        </span>
+                      )}
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </motion.div>
-          )}
-
-          {activeView === 'recommendations' && (
+          ))}
+        </div>
+      )}
+      
+      {/* Recommendations View */}
+      {activeView === 'recommendations' && (
+        <div className="bg-gray-900/30 rounded-xl p-6 space-y-6">
+          {demoRecommendations.map(recommendation => (
             <motion.div
-              key="recommendations"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.2 }}
-              className="h-full overflow-y-auto p-6"
+              key={recommendation.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="bg-gray-800/50 rounded-xl border border-gray-700/50 overflow-hidden"
             >
-              <div className="grid grid-cols-1 gap-6">
-                {demoRecommendations.map((rec) => (
-                  <motion.div
-                    key={rec.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-6"
-                  >
-                    <h3 className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-3">
-                      {rec.title}
-                    </h3>
-                    <p className="text-gray-400 mb-4">{rec.description}</p>
-                    <div className="space-y-4">
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-300 mb-2">Implementation Steps:</h4>
-                        <ul className="list-disc list-inside space-y-2 text-gray-400">
-                          {rec.steps.map((step, index) => (
-                            <li key={index}>{step}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="flex justify-between items-center pt-4 border-t border-gray-700/50">
-                        <div>
-                          <span className="text-sm text-gray-400">Impact:</span>
-                          <p className="text-green-400 font-medium">{rec.impact}</p>
-                        </div>
-                        <div>
-                          <span className="text-sm text-gray-400">Timeframe:</span>
-                          <p className="text-blue-400 font-medium">{rec.timeframe}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
+              <div className="p-4 border-b border-gray-700/50">
+                <h3 className="text-lg font-medium text-blue-400">{recommendation.title}</h3>
+                <p className="text-gray-400 text-sm mt-1">{recommendation.description}</p>
+              </div>
+              
+              <div className="p-4">
+                <h4 className="text-sm font-medium text-gray-300 mb-2">Implementation Steps:</h4>
+                <ul className="space-y-2 mb-4">
+                  {recommendation.steps.map((step, i) => (
+                    <li key={i} className="flex items-start">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs mr-2 mt-0.5">
+                        {i + 1}
+                      </span>
+                      <span className="text-gray-300 text-sm">{step}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div className="bg-gray-900/50 rounded-lg p-3">
+                    <p className="text-xs font-medium text-gray-500">Impact</p>
+                    <p className="text-sm text-blue-400 font-medium mt-1">{recommendation.impact}</p>
+                  </div>
+                  
+                  <div className="bg-gray-900/50 rounded-lg p-3">
+                    <p className="text-xs font-medium text-gray-500">Timeframe</p>
+                    <p className="text-sm text-purple-400 font-medium mt-1">{recommendation.timeframe}</p>
+                  </div>
+                </div>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 } 

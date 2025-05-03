@@ -41,6 +41,14 @@ next.config.ts.backup
 *.backup
 *.old
 
+# Components with Markdown issues
+src/app/plan-generator/**
+src/components/BusinessPlanDisplay.tsx
+src/components/DashboardPlanGenerator.tsx
+src/components/BusinessPlanTimeline.tsx
+simple-deploy/components/BusinessPlanDisplay.tsx
+react-markdown
+
 # Deployment directories
 simple-deploy/
 
