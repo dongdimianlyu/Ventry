@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "installCommand": "npm config set registry https://registry.npmjs.org/ && npm config set fetch-retry-mintimeout 20000 && npm config set fetch-retry-maxtimeout 120000 && npm install --legacy-peer-deps --prefer-offline --no-fund --no-audit --verbose && find . -name '.babelrc' -not -path '*/node_modules/*' -delete && npm install --save-dev @babel/plugin-transform-private-methods @babel/plugin-transform-private-property-in-object @babel/plugin-transform-class-properties @babel/plugin-transform-class-static-block @babel/plugin-transform-runtime @babel/plugin-proposal-do-expressions @babel/runtime",
+  "installCommand": "bash vercel-build.sh || node package-install-fallback.js",
   "buildCommand": "DISABLE_ESLINT_PLUGIN=true NEXT_DISABLE_SOURCEMAPS=true NODE_OPTIONS='--max-old-space-size=4096' npm run build --no-lint",
   "framework": {
     "name": "nextjs",
@@ -17,9 +17,13 @@
     "FIREBASE_ADMIN_SDK_DISABLED": "true",
     "BABEL_DISABLE_CACHE": "1",
     "npm_config_registry": "https://registry.npmjs.org/",
-    "npm_config_fetch_retries": "5",
-    "npm_config_fetch_retry_mintimeout": "20000",
-    "npm_config_fetch_retry_maxtimeout": "120000"
+    "npm_config_fetch_retries": "10",
+    "npm_config_fetch_retry_mintimeout": "30000",
+    "npm_config_fetch_retry_maxtimeout": "300000",
+    "npm_config_network_timeout": "300000",
+    "npm_config_timeout": "300000",
+    "npm_config_ca": "null",
+    "npm_config_strict_ssl": "false"
   },
   "cleanUrls": true,
   "trailingSlash": false,
@@ -55,9 +59,13 @@
       "NODE_OPTIONS": "--max-old-space-size=4096",
       "BABEL_DISABLE_CACHE": "1",
       "npm_config_registry": "https://registry.npmjs.org/",
-      "npm_config_fetch_retries": "5",
-      "npm_config_fetch_retry_mintimeout": "20000",
-      "npm_config_fetch_retry_maxtimeout": "120000"
+      "npm_config_fetch_retries": "10",
+      "npm_config_fetch_retry_mintimeout": "30000",
+      "npm_config_fetch_retry_maxtimeout": "300000",
+      "npm_config_network_timeout": "300000",
+      "npm_config_timeout": "300000",
+      "npm_config_ca": "null",
+      "npm_config_strict_ssl": "false"
     }
   }
 } 
