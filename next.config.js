@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const path = require('path');
+
 const nextConfig = {
   reactStrictMode: false, // Disable strict mode in development for better performance
   output: 'standalone',
@@ -44,14 +46,22 @@ const nextConfig = {
     // Disable source maps to reduce build size
     config.devtool = false;
     
-    // Make sure we're not using next/font
-    if (!isServer) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        'next/font/google': require.resolve('./src/lib/empty-module.js'),
-        'next/font/local': require.resolve('./src/lib/empty-module.js'),
-      };
-    }
+    // Replace firebase imports with empty module
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      // Replace font imports
+      'next/font/google': path.resolve(__dirname, './src/lib/empty-module.js'),
+      'next/font/local': path.resolve(__dirname, './src/lib/empty-module.js'),
+      
+      // Replace Firebase imports
+      'firebase/app': path.resolve(__dirname, './src/lib/empty-firebase.js'),
+      'firebase/auth': path.resolve(__dirname, './src/lib/empty-firebase.js'),
+      'firebase/firestore': path.resolve(__dirname, './src/lib/empty-firebase.js'),
+      'firebase': path.resolve(__dirname, './src/lib/empty-firebase.js'),
+      '@firebase/auth': path.resolve(__dirname, './src/lib/empty-firebase.js'),
+      '@firebase/app': path.resolve(__dirname, './src/lib/empty-firebase.js'),
+      '@firebase/firestore': path.resolve(__dirname, './src/lib/empty-firebase.js'),
+    };
     
     return config;
   },

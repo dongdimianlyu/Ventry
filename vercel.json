@@ -1,7 +1,7 @@
 {
   "version": 2,
   "installCommand": "npm install --legacy-peer-deps && find . -name '.babelrc' -not -path '*/node_modules/*' -delete && npm install --save-dev @babel/plugin-transform-private-methods @babel/plugin-transform-private-property-in-object @babel/plugin-transform-class-properties @babel/plugin-transform-class-static-block @babel/plugin-transform-runtime @babel/plugin-proposal-do-expressions @babel/runtime",
-  "buildCommand": "DISABLE_ESLINT_PLUGIN=true NEXT_DISABLE_SOURCEMAPS=true npm run build --no-lint",
+  "buildCommand": "DISABLE_ESLINT_PLUGIN=true NEXT_DISABLE_SOURCEMAPS=true NODE_OPTIONS='--max-old-space-size=4096' npm run build --no-lint",
   "framework": {
     "name": "nextjs",
     "useNodeNext": true,
@@ -12,7 +12,10 @@
   "env": {
     "NEXT_RUNTIME": "nodejs",
     "NODE_ENV": "production",
-    "NEXT_TELEMETRY_DISABLED": "1"
+    "NEXT_TELEMETRY_DISABLED": "1",
+    "DISABLE_FIREBASE": "true",
+    "FIREBASE_ADMIN_SDK_DISABLED": "true",
+    "BABEL_DISABLE_CACHE": "1"
   },
   "cleanUrls": true,
   "trailingSlash": false,

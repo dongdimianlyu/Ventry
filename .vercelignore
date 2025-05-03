@@ -16,12 +16,18 @@ test
 # Firebase related (to avoid the build issues)
 src/lib/firebaseTest.ts
 src/lib/firebaseConfig.ts
+src/lib/auth
+src/middleware
+src/components/AuthGuard.tsx
+src/components/GenerationLimitCounter.tsx
+src/components/DashboardLayout.tsx
 **/firebase/**
 **/auth/**
 src/app/login/**
 src/app/register/**
 src/app/password-reset/**
 src/app/subscribe/**
+src/app/auth/**
 node_modules/@firebase
 node_modules/firebase
 **/*.babelrc
