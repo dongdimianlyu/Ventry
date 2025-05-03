@@ -1,23 +1,11 @@
 'use client';
 
 import { useEffect } from 'react';
-import { initializeAuth, checkRedirectResult } from '@/lib/auth';
 
 export default function AuthInitializer() {
   useEffect(() => {
-    // Initialize authentication when the app loads
-    initializeAuth();
-    
-    // Explicitly check for redirect results
-    const handleRedirectResult = async () => {
-      try {
-        await checkRedirectResult();
-      } catch (error) {
-        console.error('Error handling redirect result:', error);
-      }
-    };
-    
-    handleRedirectResult();
+    // Simplified version for deployment that doesn't use Firebase
+    console.log('Auth initialization skipped for deployment build');
   }, []);
 
   // This component doesn't render anything

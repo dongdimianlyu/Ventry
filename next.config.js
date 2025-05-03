@@ -4,16 +4,18 @@ const nextConfig = {
   output: 'standalone',
   
   // Explicitly configure Babel
-  compiler: {
-    // Disable SWC since we're using Babel
-    emotion: false,
+  experimental: {
+    forceSwcTransforms: false, // Force Babel instead of SWC
   },
   
-  // Improve build performance
-  swcMinify: true,
+  // Disable SWC features
+  swcMinify: false,
   
   // Disable font optimization since we're using Babel
   optimizeFonts: false,
+  
+  // Transpile all node_modules
+  transpilePackages: ['@firebase', 'firebase', 'undici'],
 }
 
 module.exports = nextConfig 

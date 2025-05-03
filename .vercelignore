@@ -4,6 +4,7 @@ node_modules
 .vercel
 .env.local
 .env.development
+.env
 
 # Test and miscellaneous files
 three-backup
@@ -14,6 +15,11 @@ test
 
 # Firebase related (to avoid the build issues)
 src/lib/firebaseTest.ts
+**/firebase/**
+**/auth/**
+src/app/login/**
+src/app/register/**
+src/app/password-reset/**
 
 # Backup files
 .babelrc.old

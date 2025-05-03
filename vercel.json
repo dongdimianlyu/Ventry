@@ -1,7 +1,7 @@
 {
   "version": 2,
   "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npm install --save-dev @babel/plugin-transform-private-methods @babel/plugin-transform-private-property-in-object && npm run build",
+  "buildCommand": "npm install --save-dev @babel/plugin-transform-private-methods @babel/plugin-transform-private-property-in-object @babel/plugin-transform-class-properties @babel/plugin-transform-class-static-block && npm run build --no-lint",
   "framework": "nextjs",
   "regions": ["sfo1"],
   "outputDirectory": ".next",

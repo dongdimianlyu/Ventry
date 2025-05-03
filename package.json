@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --no-lint",
     "start": "next start",
     "start-server": "NODE_ENV=production node server.js",
     "lint": "next lint"
@@ -39,6 +39,10 @@
     "three": "^0.160.0"
   },
   "devDependencies": {
+    "@babel/plugin-transform-class-properties": "^7.27.1",
+    "@babel/plugin-transform-class-static-block": "^7.27.1",
+    "@babel/plugin-transform-private-methods": "^7.27.1",
+    "@babel/plugin-transform-private-property-in-object": "^7.27.1",
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^18",

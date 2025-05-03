@@ -1,13 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import ClientLayout from '@/components/ClientLayout'
-import AuthInitializer from '@/components/AuthInitializer'
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: 'Ventry - Strategic Planning for Small Businesses',
@@ -21,11 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body
-        className={`${inter.className} antialiased h-full`}
-        suppressHydrationWarning
-      >
-        <AuthInitializer />
+      <body className="antialiased font-sans h-full" suppressHydrationWarning>
         <ClientLayout>
           <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors duration-300">
             <div className="flex-grow">
