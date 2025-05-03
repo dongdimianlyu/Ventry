@@ -39,10 +39,13 @@
     "three": "^0.160.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-do-expressions": "^7.23.3",
     "@babel/plugin-transform-class-properties": "^7.27.1",
     "@babel/plugin-transform-class-static-block": "^7.27.1",
     "@babel/plugin-transform-private-methods": "^7.27.1",
     "@babel/plugin-transform-private-property-in-object": "^7.27.1",
+    "@babel/plugin-transform-runtime": "^7.24.6",
+    "@babel/runtime": "^7.24.6",
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^18",

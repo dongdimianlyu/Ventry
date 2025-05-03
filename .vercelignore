@@ -15,14 +15,19 @@ test
 
 # Firebase related (to avoid the build issues)
 src/lib/firebaseTest.ts
+src/lib/firebaseConfig.ts
 **/firebase/**
 **/auth/**
 src/app/login/**
 src/app/register/**
 src/app/password-reset/**
+node_modules/@firebase
+node_modules/firebase
 
-# Backup files
+# Babel and config files issues
+.babelrc
 .babelrc.old
+.babelrc.bak
 next.config.ts.backup
 *.backup
 *.old

@@ -1,3 +1,4 @@
+// This file has been backed up and replaced by babel.config.js
 {
   "presets": [
     "next/babel"

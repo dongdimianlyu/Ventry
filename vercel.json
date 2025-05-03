@@ -1,13 +1,18 @@
 {
   "version": 2,
-  "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npm install --save-dev @babel/plugin-transform-private-methods @babel/plugin-transform-private-property-in-object @babel/plugin-transform-class-properties @babel/plugin-transform-class-static-block && npm run build --no-lint",
-  "framework": "nextjs",
+  "installCommand": "npm install --legacy-peer-deps && rm -f .babelrc && npm install --save-dev @babel/plugin-transform-private-methods @babel/plugin-transform-private-property-in-object @babel/plugin-transform-class-properties @babel/plugin-transform-class-static-block @babel/plugin-transform-runtime @babel/plugin-proposal-do-expressions @babel/runtime",
+  "buildCommand": "npm run build --no-lint",
+  "framework": {
+    "name": "nextjs",
+    "useNodeNext": true,
+    "nodeVersion": "18.x"
+  },
   "regions": ["sfo1"],
   "outputDirectory": ".next",
   "env": {
     "NEXT_RUNTIME": "nodejs",
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "NEXT_TELEMETRY_DISABLED": "1"
   },
   "cleanUrls": true,
   "trailingSlash": false,
