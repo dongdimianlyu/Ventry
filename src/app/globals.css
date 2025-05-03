@@ -5,6 +5,13 @@
 :root {
   --background: #f8f9fa;
   --foreground: #1a1a1a;
+  --primary: 59 130 246; /* Blue-500 */
+  --primary-foreground: 255 255 255;
+  --secondary: 45 212 191; /* Teal-400 */
+  --secondary-foreground: 0 0 0;
+  --muted: 243 244 246; /* Gray-100 */
+  --muted-foreground: 107 114 128; /* Gray-500 */
+  --border: 229 231 235; /* Gray-200 */
   --card-bg: rgba(255, 255, 255, 0.85);
   --card-border: rgba(230, 230, 235, 0.5);
   --subtle-accent: #f0f2f5;
@@ -19,6 +26,13 @@
   :root {
     --background: #0a0a0a;
     --foreground: #f0f0f0;
+    --primary: 59 130 246; /* Blue-500 */
+    --primary-foreground: 255 255 255;
+    --secondary: 45 212 191; /* Teal-400 */
+    --secondary-foreground: 0 0 0;
+    --muted: 31 41 55; /* Gray-800 */
+    --muted-foreground: 156 163 175; /* Gray-400 */
+    --border: 55 65 81; /* Gray-700 */
     --card-bg: rgba(16, 16, 20, 0.75);
     --card-border: rgba(35, 35, 40, 0.6);
     --subtle-accent: #181820;
@@ -44,6 +58,10 @@ body {
   background-image: 
     radial-gradient(circle at 20% 35%, rgba(60, 60, 60, 0.015) 0%, transparent 50%),
     radial-gradient(circle at 75% 44%, rgba(60, 60, 60, 0.03) 0%, transparent 50%);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
 .dark body {
@@ -326,4 +344,67 @@ body {
   .business-plan-content table {
     page-break-inside: avoid;
   }
+}
+
+/* Animation for scan line effect */
+@keyframes scan-x {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  20%, 80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-scan-x {
+  animation: scan-x 4s infinite cubic-bezier(0.3, 0, 0.7, 1);
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s infinite ease-in-out;
+}
+
+/* Keep these important fixes */
+html {
+  scroll-behavior: smooth;
+}
+
+main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  flex-shrink: 0;
+}
+
+/* Prevent overflow on main container */
+.overflow-fix {
+  overflow-x: hidden;
+}
+
+#root, #__next {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Remove these redundant classes */
+.max-h-screen-real {
+  display: none;
 }

@@ -1,0 +1,39 @@
+/* Fix for vertically stacked elements */
+.flex {
+  display: flex !important;
+}
+
+.inline-flex {
+  display: inline-flex !important;
+}
+
+.grid {
+  display: grid !important;
+}
+
+.block {
+  display: block !important;
+}
+
+.inline-block {
+  display: inline-block !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Fix media queries */
+@media (min-width: 768px) {
+  .md\:flex {
+    display: flex !important;
+  }
+  
+  .md\:block {
+    display: block !important;
+  }
+  
+  .md\:hidden {
+    display: none !important;
+  }
+} 

@@ -8,11 +8,14 @@ const publicPaths = [
   '/auth/login',
   '/auth/signup',
   '/auth/login/email',
+  '/test',
+  '/deploy-test',
 ];
 
 // Public API endpoints (like auth endpoints)
 const publicApiPaths = [
   '/api/auth',
+  '/api/health',
 ];
 
 // Check if the path should be accessible without authentication
@@ -34,6 +37,23 @@ const isPublicApiPath = (path: string) => {
   );
 };
 
+// Simple function to extract a user ID from a JWT token
+// This is a very basic implementation - in production you should use proper JWT verification
+const extractUserIdFromToken = (token: string): string | null => {
+  try {
+    // JWT tokens are in format: header.payload.signature
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    
+    // Decode the payload (second part)
+    const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+    return payload.user_id || payload.sub || null;
+  } catch (error) {
+    console.error('Error extracting user ID from token:', error);
+    return null;
+  }
+};
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
@@ -41,6 +61,12 @@ export function middleware(request: NextRequest) {
   const authCookie = request.cookies.get('firebase-auth-token')?.value;
   const sessionCookie = request.cookies.get('__session')?.value;
   const isAuthenticated = !!authCookie || !!sessionCookie;
+  
+  // Try to extract user ID from auth token if available
+  let userId = null;
+  if (authCookie) {
+    userId = extractUserIdFromToken(authCookie);
+  }
 
   // Allow access to public paths without authentication
   if (isPublicPath(pathname)) {
@@ -65,7 +91,13 @@ export function middleware(request: NextRequest) {
       );
     }
     
-    return NextResponse.next();
+    // For authenticated API requests, pass the user ID in headers
+    const response = NextResponse.next();
+    if (userId) {
+      response.headers.set('x-user-id', userId);
+    }
+    
+    return response;
   }
 
   // If user is not authenticated and tries to access a protected route, redirect to login

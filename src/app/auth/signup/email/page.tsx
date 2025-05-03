@@ -5,68 +5,6 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
-// Dynamic animated background component
-const AnimatedBackground = () => {
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      <div className="absolute inset-0 bg-gray-950"></div>
-      
-      <div className="absolute inset-0">
-        {/* Grid pattern */}
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
-        
-        {/* Moving gradient blobs */}
-        <motion.div 
-          className="absolute top-0 -left-40 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl"
-          animate={{ 
-            y: [0, 40, 0],
-            scale: [1, 1.1, 1],
-            rotate: [0, 10, 0]
-          }}
-          transition={{ 
-            duration: 20, 
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut" 
-          }}
-        />
-        
-        <motion.div 
-          className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl"
-          animate={{ 
-            y: [0, -30, 0],
-            x: [0, -20, 0],
-            scale: [1, 1.05, 1],
-            rotate: [0, -5, 0]
-          }}
-          transition={{ 
-            duration: 15, 
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut",
-            delay: 2
-          }}
-        />
-        
-        <motion.div 
-          className="absolute top-40 right-20 w-60 h-60 bg-blue-500/5 rounded-full blur-3xl"
-          animate={{ 
-            x: [0, 30, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{ 
-            duration: 18, 
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut",
-            delay: 1
-          }}
-        />
-      </div>
-    </div>
-  );
-};
-
 // Floating elements animation
 const FloatingElements = () => {
   return (
@@ -202,8 +140,22 @@ export default function EmailSignUpPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 flex overflow-hidden">
-      {/* Animated background effects */}
-      {mounted && <AnimatedBackground />}
+      {/* Static background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-gray-950"></div>
+        
+        <div className="absolute inset-0">
+          {/* Grid pattern */}
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+          
+          {/* Static gradient elements */}
+          <div className="absolute top-0 -left-40 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-40 right-20 w-60 h-60 bg-blue-500/5 rounded-full blur-3xl"></div>
+        </div>
+      </div>
+      
+      {/* Floating elements */}
       {mounted && <FloatingElements />}
       
       {/* Main content container */}
