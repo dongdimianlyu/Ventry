@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  return new Response(JSON.stringify({ status: 'ok' }), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
+  return NextResponse.json({ 
+    status: 'ok',
+    timestamp: new Date().toISOString()
   });
 } 

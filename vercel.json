@@ -1,29 +1,16 @@
 {
   "version": 2,
-  "installCommand": "npm config set registry https://registry.npmjs.org/ && npm config set fetch-retry-mintimeout 20000 && npm config set fetch-retry-maxtimeout 120000 && npm install --legacy-peer-deps --prefer-offline --no-fund --no-audit --verbose && find . -name '.babelrc' -not -path '*/node_modules/*' -delete && npm install --save-dev @babel/plugin-transform-private-methods @babel/plugin-transform-private-property-in-object @babel/plugin-transform-class-properties @babel/plugin-transform-class-static-block @babel/plugin-transform-runtime @babel/plugin-proposal-do-expressions @babel/runtime",
-  "buildCommand": "DISABLE_ESLINT_PLUGIN=true NEXT_DISABLE_SOURCEMAPS=true NODE_OPTIONS='--max-old-space-size=4096' npm run build --no-lint",
-  "framework": {
-    "name": "nextjs",
-    "useNodeNext": true,
-    "nodeVersion": "18.x"
-  },
-  "regions": ["sfo1"],
+  "buildCommand": "npm run build",
+  "installCommand": "npm install --legacy-peer-deps --no-fund --no-audit",
+  "framework": "nextjs",
   "outputDirectory": ".next",
   "env": {
-    "NEXT_RUNTIME": "nodejs",
-    "NODE_ENV": "production",
+    "NEXT_PUBLIC_DISABLE_FIREBASE": "true",
+    "NODE_OPTIONS": "--max-old-space-size=4096",
     "NEXT_TELEMETRY_DISABLED": "1",
-    "DISABLE_FIREBASE": "true",
-    "FIREBASE_ADMIN_SDK_DISABLED": "true",
-    "BABEL_DISABLE_CACHE": "1",
-    "npm_config_registry": "https://registry.npmjs.org/",
-    "npm_config_fetch_retries": "5",
-    "npm_config_fetch_retry_mintimeout": "20000",
-    "npm_config_fetch_retry_maxtimeout": "120000"
+    "NEXT_RUNTIME": "nodejs",
+    "NODE_ENV": "production"
   },
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "ignoreCommand": "echo 'Skipping checks'",
   "headers": [
     {
       "source": "/(.*)",
@@ -41,33 +28,6 @@
           "value": "1; mode=block"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/health"
-    }
-  ],
-  "build": {
-    "env": {
-      "NEXT_DISABLE_ESLINT": "true",
-      "NODE_OPTIONS": "--max-old-space-size=4096",
-      "BABEL_DISABLE_CACHE": "1",
-      "npm_config_registry": "https://registry.npmjs.org/",
-      "npm_config_fetch_retries": "5",
-      "npm_config_fetch_retry_mintimeout": "20000",
-      "npm_config_fetch_retry_maxtimeout": "120000"
-    }
-  },
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next",
-      "config": {
-        "installCommand": "npm install --no-audit --no-fund --prefer-offline --legacy-peer-deps",
-        "buildCommand": "npm run vercel-build"
-      }
     }
   ]
 } 

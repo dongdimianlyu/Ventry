@@ -2,36 +2,11 @@
 const path = require('path');
 
 const nextConfig = {
-  reactStrictMode: false, // Disable strict mode for better performance
+  reactStrictMode: false,
   output: 'standalone',
-  
-  // Completely disable SWC
-  swcMinify: false,
-  
-  // Explicitly configure for Babel usage
-  compiler: {
-    // Must be set to false when using Babel
-    styledComponents: false
-  },
-  
-  experimental: {
-    // Force using Babel, not SWC
-    forceSwcTransforms: false
-  },
-  
-  // Disable font optimization
-  optimizeFonts: false,
-  
-  // We need to transpile these packages
-  transpilePackages: [
-    '@firebase', 
-    'firebase', 
-    'undici'
-  ],
   
   // Production performance optimizations
   productionBrowserSourceMaps: false,
-  compress: true,
   
   // Disable webpack5 features that conflict with our setup
   webpack: (config, { isServer }) => {
@@ -46,28 +21,6 @@ const nextConfig = {
     
     // Disable source maps to reduce build size
     config.devtool = false;
-    
-    // Replace firebase imports with empty module
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      // Replace font imports
-      'next/font/google': path.resolve(__dirname, './src/lib/empty-module.js'),
-      'next/font/local': path.resolve(__dirname, './src/lib/empty-module.js'),
-      
-      // Replace Firebase imports
-      'firebase/app': path.resolve(__dirname, './src/lib/empty-firebase.js'),
-      'firebase/auth': path.resolve(__dirname, './src/lib/empty-firebase.js'),
-      'firebase/firestore': path.resolve(__dirname, './src/lib/empty-firebase.js'),
-      'firebase': path.resolve(__dirname, './src/lib/empty-firebase.js'),
-      '@firebase/auth': path.resolve(__dirname, './src/lib/empty-firebase.js'),
-      '@firebase/app': path.resolve(__dirname, './src/lib/empty-firebase.js'),
-      '@firebase/firestore': path.resolve(__dirname, './src/lib/empty-firebase.js'),
-      
-      // Replace react-markdown with empty module
-      'react-markdown': path.resolve(__dirname, './src/lib/empty-module.js'),
-      'remark-gfm': path.resolve(__dirname, './src/lib/empty-module.js'),
-      'react-syntax-highlighter': path.resolve(__dirname, './src/lib/empty-module.js'),
-    };
     
     return config;
   },
